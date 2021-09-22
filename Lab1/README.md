@@ -8,7 +8,7 @@
 Реализация должна содержать 2 функции перемножения матриц: на CPU и на GPU с
 применением CUDA.  
 ### Аппаратная база
-Device: Jetson Nano B01  
+Работа выполнена с использованием Jetson Nano B01  
 Processor: ARMv8 Processor rev 1 (v8l) x 4  
 Graphics: NVIDIA Tegra X1 (nvgpu)/integrated  
 ### Описание программы
