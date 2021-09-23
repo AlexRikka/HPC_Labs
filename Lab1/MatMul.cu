@@ -55,15 +55,15 @@ void conseq_mmul(const float *A, const float *B, float *C, const int N) {
 }
 
 double time_diff(struct timeval x, struct timeval y){
-	double x_ms, y_ms, diff;
-	x_ms = (double)x.tv_sec * 1000000 + (double)x.tv_usec;
-	y_ms = (double)y.tv_sec * 1000000 + (double)y.tv_usec;
-	diff = (double)y_ms - (double)x_ms;
-	return diff;
+    double x_ms, y_ms, diff;
+    x_ms = (double)x.tv_sec * 1000000 + (double)x.tv_usec;
+    y_ms = (double)y.tv_sec * 1000000 + (double)y.tv_usec;
+    diff = (double)y_ms - (double)x_ms;
+    return diff;
 }
 
 void print_matrix(float *Matr, int nr_rows_Matr, int nr_cols_Matr){
-	for (int i = 0; i < nr_rows_Matr; ++i) {
+    for (int i = 0; i < nr_rows_Matr; ++i) {
         for (int j = 0; j < nr_cols_Matr; ++j) {
             printf("%f ", Matr[IDX2C(i, j, nr_rows_Matr)]);
         }
@@ -85,31 +85,31 @@ int main(int argc, char* argv[]) {
     cudaMalloc(&d_A,nr_rows_A * nr_cols_A * sizeof(float));
     cudaMalloc(&d_B,nr_rows_B * nr_cols_B * sizeof(float));
     cudaMalloc(&d_C,nr_rows_C * nr_cols_C * sizeof(float));
-	
-	// Fill in 2 matrices on GPU
-	gpu_fill_rand(d_A, nr_rows_A, nr_cols_A); 
-   	gpu_fill_rand(d_B, nr_rows_B, nr_cols_B);
-	
-	// Copy them on CPU
-    cudaMemcpy(h_A, d_A, nr_rows_A * nr_cols_A * sizeof(float), cudaMemcpyDeviceToHost); 
-	cudaMemcpy(h_B, d_B, nr_rows_B * nr_cols_B * sizeof(float), cudaMemcpyDeviceToHost); 
 
-	// printf("%s", "A=\n");
+    // Fill in 2 matrices on GPU
+    gpu_fill_rand(d_A, nr_rows_A, nr_cols_A); 
+    gpu_fill_rand(d_B, nr_rows_B, nr_cols_B);
+
+    // Copy them on CPU
+    cudaMemcpy(h_A, d_A, nr_rows_A * nr_cols_A * sizeof(float), cudaMemcpyDeviceToHost); 
+    cudaMemcpy(h_B, d_B, nr_rows_B * nr_cols_B * sizeof(float), cudaMemcpyDeviceToHost); 
+
+    // printf("%s", "A=\n");
     // print_matrix(h_A, nr_rows_A, nr_cols_A);
-	// printf("%s", "B=\n");
+    // printf("%s", "B=\n");
     // print_matrix(h_B, nr_rows_B, nr_cols_B);
-	
-	cudaEvent_t start, stop; 
+
+    cudaEvent_t start, stop; 
     float gpuTime = 0.0f;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
-	// Setting start point
+    // Setting start point
     cudaEventRecord(start, 0);
-	
+
     // Multiply A and B on GPU
     gpu_blas_mmul(d_A, d_B, d_C, nr_rows_A, nr_cols_A, nr_cols_B);
 
-	cudaDeviceSynchronize();
+    cudaDeviceSynchronize();
 
     // Copy (and print) the result on host memory
     cudaMemcpy(h_C, d_C, nr_rows_C * nr_cols_C * sizeof(float), cudaMemcpyDeviceToHost);
@@ -122,12 +122,12 @@ int main(int argc, char* argv[]) {
     // printf("%s", "C=\n"); 
     // print_matrix(h_C, nr_rows_C, nr_cols_C);
     // Computing time for CPU function
-    
-	double total_time = 0.0;
-	struct timeval before, after;
-	gettimeofday(&before, NULL);
-	conseq_mmul(h_A, h_B, h_C, n);
-	gettimeofday(&after, NULL);
+
+    double total_time = 0.0;
+    struct timeval before, after;
+    gettimeofday(&before, NULL);
+    conseq_mmul(h_A, h_B, h_C, n);
+    gettimeofday(&after, NULL);
     total_time += time_diff(before, after);
     // printf("%s", "C=\n"); 
     // print_matrix(h_C, nr_rows_C, nr_cols_C);
