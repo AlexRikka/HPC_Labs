@@ -10,22 +10,22 @@
 void gpu_fill_rand(float *A, int nr_rows_A, int nr_cols_A) {
     // Create a pseudo-random number generator
     curandGenerator_t prng;
-	//(Pointer to generator, Type of generator to create) 
+    //(Pointer to generator, Type of generator to create) 
     curandCreateGenerator(&prng, CURAND_RNG_PSEUDO_DEFAULT);
     // Set the seed for the random number generator using the system clock
     curandSetPseudoRandomGeneratorSeed(prng, (unsigned long long) clock());
 
     // Fill the array with random numbers on the device
-	// (Generator, Pointer to device memory to store CUDA-generated results, Number of floats to generate)
+    // (Generator, Pointer to device memory to store CUDA-generated results, Number of floats to generate)
     curandGenerateUniform(prng, A, nr_rows_A * nr_cols_A);
 }
 
 // Multiply the arrays A and B on GPU and save the result in C
 // C(m,n) = A(m,k) * B(k,n)
 void gpu_blas_mmul(const float *A, const float *B, float *C, const int m, const int k, const int n) { 
-	// A: m*k, B: k*n, C: m*n
-	// C = alpha*op(A)*op(B)+ beta*C 
-	//nr_rows_A, nr_cols_A, nr_cols_B
+    // A: m*k, B: k*n, C: m*n
+    // C = alpha*op(A)*op(B)+ beta*C 
+    //nr_rows_A, nr_cols_A, nr_cols_B
     int lda=m,ldb=k,ldc=m;
     const float alf = 1;
     const float bet = 0;
@@ -35,8 +35,8 @@ void gpu_blas_mmul(const float *A, const float *B, float *C, const int m, const 
     cublasHandle_t handle;
     cublasCreate(&handle);
     // Do the actual multiplication
-	// (generator, transa, transb, m,n,k, alpha,
-	//  array of dimensions lda x k, leading dimension of two-dimensional array used to store the matrix A, ...
+    // (generator, transa, transb, m,n,k, alpha,
+    //  array of dimensions lda x k, leading dimension of two-dimensional array used to store the matrix A, ...
     cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, A, lda, B, ldb, beta, C, ldc);
     // Destroy the handle
     cublasDestroy(handle);
