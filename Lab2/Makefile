@@ -1,0 +1,5 @@
+THREADS_PER_BLOCK = 1024
+NVCC = nvcc 
+CFLAGS = -g -G -O0 -DTHREADS_PER_BLOCK=$(THREADS_PER_BLOCK)
+VectSum: VectSum.cu
+		$(NVCC) $(CFLAGS) $< -o $@
