@@ -64,7 +64,7 @@ double time_diff(struct timeval x, struct timeval y){
 }
 
 int main(int argc, char* argv[]) {
-	int n = atoi(argv[1]); 
+    int n = atoi(argv[1]); 
 
     int i;
     int nb = n*sizeof(int);
@@ -80,12 +80,12 @@ int main(int argc, char* argv[]) {
    
     // allocate memory on device
     int *adev = NULL;  
-	int *cdev = NULL;  
+    int *cdev = NULL;  
     cudaMalloc((void**) &adev, nb); 
     cudaMalloc((void**) &cdev, sizeof(int)); 
 	
-	// copy vectors from host to device 
-	//cudaMemcpy(dst, src, size in bytes to copy, type of transfer)
+    // copy vectors from host to device 
+    //cudaMemcpy(dst, src, size in bytes to copy, type of transfer)
     cudaMemcpy(adev, a, nb, cudaMemcpyHostToDevice);
 
     cudaEvent_t start, stop; 
